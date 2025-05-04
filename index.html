@@ -1,11 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Hello World</h1>
-</body>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Korean Transcriber</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <button class="report-toggle" onclick="toggleReport(true)">
+        Report ▶
+      </button>
+      <button
+        class="report-close"
+        onclick="toggleReport(false)"
+        style="display: none"
+      >
+        ◀ Close
+      </button>
+
+      <h1>그해 우리는</h1>
+
+      <div class="video-section">
+        <button class="arrow-button" onclick="previousVideo()">&#x276E;</button>
+        <iframe
+          id="youtubePlayer"
+          src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+          allowfullscreen
+        ></iframe>
+        <button class="arrow-button" onclick="nextVideo()">&#x276F;</button>
+      </div>
+
+      <div class="script-box" id="scriptBox">보고 싶었어</div>
+
+      <div class="control-area">
+        <div class="control-left">
+          <img
+            class="recording-wave"
+            src="Images/audioWave.png"
+            alt="Recording Waveform"
+          />
+        </div>
+        <div class="control-buttons">
+          <button
+            class="circle-button"
+            onclick="startRecording()"
+            data-tooltip="음성 녹음 시작"
+          >
+            <img src="Images/record.png" alt="Mic" />
+          </button>
+          <button
+            class="circle-button"
+            onclick="replayVideo()"
+            data-tooltip="영상 다시 보기"
+          >
+            <img src="Images/replay.png" alt="Replay" />
+          </button>
+        </div>
+      </div>
+
+      <div class="report-panel" id="reportPanel">
+        <h2>Report</h2>
+        <p>Pitch, Duration, Stress 분석 결과를 여기에 표시합니다.</p>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
 </html>
