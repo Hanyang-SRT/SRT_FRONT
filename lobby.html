@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Korean Transcriber - 로비</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .category-container {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        max-width: 500px;
+        width: 80%;
+        margin: 40px auto;
+        padding: 20px;
+      }
+
+      .category-button {
+        background-color: white;
+        color: #2e294e;
+        border: none;
+        padding: 30px 40px;
+        border-radius: 15px;
+        font-size: 1.8em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        min-width: 300px;
+        width: 100%;
+      }
+
+      .category-button:hover {
+        transform: translateX(15px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      .category-button::after {
+        content: '→';
+        font-size: 1.8em;
+        color: #2e294e;
+        margin-left: 20px;
+        padding-right: 0;
+      }
+
+      .welcome-message {
+        text-align: center;
+        margin-bottom: 20px;
+        margin-top: -80px;
+      }
+
+      .welcome-message h1 {
+        font-size: 3.5em;
+        margin-bottom: 80px;
+        color: white;
+      }
+
+      .welcome-message p {
+        font-size: 1.8em;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 60px;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="welcome-message">
+        <h1>Korean Transcriber</h1>
+        <p>원하는 카테고리를 선택해주세요</p>
+      </div>
+
+      <div class="category-container">
+        <button class="category-button" onclick="location.href='index.html'">
+          💼 직장 생활
+        </button>
+        <button class="category-button" onclick="location.href='campus.html'">
+          🎓 청춘/캠퍼스
+        </button>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html> 
