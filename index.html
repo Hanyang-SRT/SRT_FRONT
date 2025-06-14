@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Korean Transcriber</title>
     <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </head>
   <body>
     <div class="container">
@@ -47,17 +48,25 @@
         </div>
         <div class="control-buttons">
           <button
+            id="recordBtn"
             class="circle-button"
-            onclick="startRecording()"
-            data-tooltip="음성 녹음 시작"
+            onclick="toggleRecording()"
+            data-tooltip="음성 녹음 시작/종료 및 업로드"
           >
-            <img src="Images/record.png" alt="Mic" />
+            <img id="recordIcon" src="Images/record.png" alt="Mic" />
           </button>
+          <span id="timer" style="color:#ff0033; margin-left:10px; font-weight:bold;">00:00</span>
           <button
+            id="playBtn"
             class="circle-button"
-            onclick="replayVideo()"
-            data-tooltip="영상 다시 보기"
+            onclick="playRecordedAudio()"
+            style="display:none; margin-left:10px;"
+            data-tooltip="녹음 파일 재생"
           >
+            <img src="Images/play.png" alt="Play" />
+          </button>
+        </div>
+        <audio id="audioPlayer" style="display:none;"></audio>
             <img src="Images/replay.png" alt="Replay" />
           </button>
         </div>

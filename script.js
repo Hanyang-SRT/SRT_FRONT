@@ -1,17 +1,14 @@
 // YouTube API 설정
-const API_KEY = process.env.VITE_YOUTUBE_API_KEY;
-const videoIds = ['aW7D5S2ze3c']; // 비디오 ID를 저장할 배열
+const API_KEY = 'AIzaSyAlHlTzINPubn3CXk8hVZx2TI9YuT7ejoE'; // 여기에 발급받은 API 키를 입력하세요
+const videoIds = []; // 비디오 ID를 저장할 배열
 
 // YouTube API 초기화
 function initYouTubeAPI() {
-  if (typeof YT === 'undefined' || typeof YT.Player === 'undefined') {
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    const firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-  } else {
-    onYouTubeIframeAPIReady();
-  }
+  // YouTube IFrame API 로드
+  const tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  const firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 }
 
 // YouTube 플레이어 객체
@@ -19,21 +16,17 @@ let player;
 
 // YouTube IFrame API 준비되면 호출되는 함수
 function onYouTubeIframeAPIReady() {
-  if (player) return; // 이미 플레이어가 초기화되었다면 리턴
-
   player = new YT.Player('youtubePlayer', {
     height: '360',
     width: '640',
     videoId: videoIds[0],
     playerVars: {
       'playsinline': 1,
-      'controls': 1,
-      'rel': 0
+      'controls': 1
     },
     events: {
       'onReady': onPlayerReady,
-      'onStateChange': onPlayerStateChange,
-      'onError': onPlayerError
+      'onStateChange': onPlayerStateChange
     }
   });
 }
@@ -41,17 +34,11 @@ function onYouTubeIframeAPIReady() {
 // 플레이어 준비 완료시 호출
 function onPlayerReady(event) {
   console.log('Player is ready');
-  event.target.playVideo();
 }
 
 // 플레이어 상태 변경시 호출
 function onPlayerStateChange(event) {
   console.log('Player state changed:', event.data);
-}
-
-// 플레이어 에러 발생시 호출
-function onPlayerError(event) {
-  console.error('Player error:', event.data);
 }
 
 // 이전 비디오 재생
@@ -70,8 +57,101 @@ function nextVideo() {
   }
 }
 
+let mediaRecorder;
+let audioChunks = [];
+let isRecording = false;
+let timerInterval;
+let seconds = 0;
+let recordedAudioUrl = null;
+
+function toggleRecording() {
+  if (!isRecording) {
+    startRecording();
+    isRecording = true;
+    // UI 변경
+    document.getElementById('recordIcon').src = "Images/stop.png"; // 네모 아이콘
+    document.getElementById('timer').textContent = "00:00";
+    document.getElementById('timer').style.display = "inline";
+    document.getElementById('playBtn').style.display = "none";
+    seconds = 0;
+    timerInterval = setInterval(updateTimer, 1000);
+  } else {
+    stopRecording();
+    isRecording = false;
+    // UI 변경
+    document.getElementById('recordIcon').src = "Images/record.png"; // 마이크 아이콘
+    clearInterval(timerInterval);
+  }
+}
+
+function updateTimer() {
+  seconds++;
+  const min = String(Math.floor(seconds / 60)).padStart(2, '0');
+  const sec = String(seconds % 60).padStart(2, '0');
+  document.getElementById('timer').textContent = `${min}:${sec}`;
+}
+
 function startRecording() {
-  alert("Voice recording started (Whisper integration to be implemented)");
+  navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(stream => {
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.start();
+      audioChunks = [];
+
+      mediaRecorder.ondataavailable = event => {
+        audioChunks.push(event.data);
+      };
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+        // 녹음된 파일을 재생할 수 있도록 URL 생성
+        if (recordedAudioUrl) {
+          URL.revokeObjectURL(recordedAudioUrl);
+        }
+        recordedAudioUrl = URL.createObjectURL(audioBlob);
+        document.getElementById('audioPlayer').src = recordedAudioUrl;
+        document.getElementById('playBtn').style.display = "inline";
+        uploadAudio(audioBlob);
+      };
+
+      // UI
+      alert("녹음이 시작되었습니다. 다시 버튼을 누르면 종료 및 업로드됩니다.");
+    })
+    .catch(err => {
+      alert("마이크 권한이 필요합니다.");
+    });
+}
+
+function stopRecording() {
+  if (mediaRecorder && mediaRecorder.state !== "inactive") {
+    mediaRecorder.stop();
+  }
+}
+
+function uploadAudio(audioBlob) {
+  const formData = new FormData();
+  formData.append('user_audio', audioBlob, 'recorded.wav');
+
+  axios.post('/api/upload-audio', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+  .then(response => {
+    alert('업로드 성공: ' + JSON.stringify(response.data));
+    // TODO: 분석 결과를 화면에 표시하는 코드 추가 가능
+  })
+  .catch(error => {
+    alert('업로드 실패: ' + error);
+  });
+}
+
+// 녹음된 파일 재생
+function playRecordedAudio() {
+  const audio = document.getElementById('audioPlayer');
+  if (audio.src) {
+    audio.play();
+  }
 }
 
 function replayVideo() {
