@@ -43,7 +43,7 @@
             id="playBtn"
             class="icon-button"
             onclick="togglePlayPause()"
-            style="display:none; margin-right:10px;"
+            style="display: none; margin-right: 10px"
             data-tooltip="녹음 파일 재생"
           >
             <img id="playPauseIcon" src="Images/play.png" alt="Play" />
@@ -63,21 +63,23 @@
           id="replayBtn"
           class="circle-button"
           onclick="replayVideo()"
-          style="margin-left:20px;"
+          style="margin-left: 20px"
           data-tooltip="영상 다시보기"
         >
           <img src="Images/replay.png" alt="Replay" />
         </button>
       </div>
 
-      <audio id="audioPlayer" style="display:none;"></audio>
+      <audio id="audioPlayer" style="display: none"></audio>
 
       <div class="report-panel" id="reportPanel">
         <h2>Report</h2>
         <p>Pitch, Duration, Stress 분석 결과를 여기에 표시합니다.</p>
       </div>
-    </div>
 
+      <input type="text" id="contentIdInput" placeholder="Contents ID 입력" />
+      <button onclick="testGetContentById()">콘텐츠 조회 테스트</button>
+    </div>
     <script src="script.js"></script>
   </body>
 </html>
