@@ -48,29 +48,37 @@
         </div>
         <div class="control-buttons">
           <button
+            id="playBtn"
+            class="icon-button"
+            onclick="togglePlayPause()"
+            style="display:none; margin-right:10px;"
+            data-tooltip="녹음 파일 재생"
+          >
+            <img id="playPauseIcon" src="Images/play.png" alt="Play" />
+          </button>
+          <button
             id="recordBtn"
             class="circle-button"
             onclick="toggleRecording()"
-            data-tooltip="음성 녹음 시작/종료 및 업로드"
+            data-tooltip="음성 녹음"
           >
             <img id="recordIcon" src="Images/record.png" alt="Mic" />
-          </button>
-          <span id="timer" style="color:#ff0033; margin-left:10px; font-weight:bold;">00:00</span>
-          <button
-            id="playBtn"
-            class="circle-button"
-            onclick="playRecordedAudio()"
-            style="display:none; margin-left:10px;"
-            data-tooltip="녹음 파일 재생"
-          >
-            <img src="Images/play.png" alt="Play" />
+            <div class="stop-icon"></div>
+            <span id="timer">00:00</span>
           </button>
         </div>
-        <audio id="audioPlayer" style="display:none;"></audio>
-            <img src="Images/replay.png" alt="Replay" />
-          </button>
-        </div>
+        <button
+          id="replayBtn"
+          class="circle-button"
+          onclick="replayVideo()"
+          style="margin-left:20px;"
+          data-tooltip="영상 다시보기"
+        >
+          <img src="Images/replay.png" alt="Replay" />
+        </button>
       </div>
+
+      <audio id="audioPlayer" style="display:none;"></audio>
 
       <div class="report-panel" id="reportPanel">
         <h2>Report</h2>

@@ -63,15 +63,20 @@ let isRecording = false;
 let timerInterval;
 let seconds = 0;
 let recordedAudioUrl = null;
+let isPlaying = false;
 
 function toggleRecording() {
+  const recordBtn = document.getElementById('recordBtn');
+  const recordIcon = document.getElementById('recordIcon');
+  const timer = document.getElementById('timer');
   if (!isRecording) {
     startRecording();
     isRecording = true;
     // UI 변경
-    document.getElementById('recordIcon').src = "Images/stop.png"; // 네모 아이콘
-    document.getElementById('timer').textContent = "00:00";
-    document.getElementById('timer').style.display = "inline";
+    recordBtn.classList.add('recording');
+    recordIcon.src = "Images/stop.png"; // 네모 아이콘
+    timer.textContent = "00:00";
+    timer.style.display = "inline";
     document.getElementById('playBtn').style.display = "none";
     seconds = 0;
     timerInterval = setInterval(updateTimer, 1000);
@@ -79,7 +84,9 @@ function toggleRecording() {
     stopRecording();
     isRecording = false;
     // UI 변경
-    document.getElementById('recordIcon').src = "Images/record.png"; // 마이크 아이콘
+    recordBtn.classList.remove('recording');
+    recordIcon.src = "Images/record.png"; // 마이크 아이콘
+    timer.style.display = "none";
     clearInterval(timerInterval);
   }
 }
@@ -113,9 +120,6 @@ function startRecording() {
         document.getElementById('playBtn').style.display = "inline";
         uploadAudio(audioBlob);
       };
-
-      // UI
-      alert("녹음이 시작되었습니다. 다시 버튼을 누르면 종료 및 업로드됩니다.");
     })
     .catch(err => {
       alert("마이크 권한이 필요합니다.");
@@ -177,6 +181,33 @@ function toggleReport(show) {
     closeBtn.style.display = "none";
   }
 }
+
+function togglePlayPause() {
+  const audio = document.getElementById('audioPlayer');
+  const icon = document.getElementById('playPauseIcon');
+  if (!audio.src) return;
+
+  if (!isPlaying) {
+    audio.play();
+    icon.src = "Images/pause.png"; // 일시정지 아이콘으로 변경
+    isPlaying = true;
+  } else {
+    audio.pause();
+    icon.src = "Images/play.png"; // 다시 play 아이콘으로 변경
+    isPlaying = false;
+  }
+}
+
+// 오디오가 끝나면 play 아이콘으로 복귀
+window.addEventListener('DOMContentLoaded', function() {
+  const audio = document.getElementById('audioPlayer');
+  if (audio) {
+    audio.addEventListener('ended', function() {
+      document.getElementById('playPauseIcon').src = "Images/play.png";
+      isPlaying = false;
+    });
+  }
+});
 
 // 페이지 로드시 YouTube API 초기화
 window.onload = function() {

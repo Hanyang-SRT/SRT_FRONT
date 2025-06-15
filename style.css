@@ -88,18 +88,57 @@ iframe {
 .control-buttons {
   display: flex;
   gap: 1rem;
+  margin-left: auto;
 }
 .circle-button {
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  border: none;
-  background-color: #fff;
+  background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  border: none;
   position: relative;
+  transition: width 0.3s, border-radius 0.3s;
+  overflow: hidden;
+  padding: 0;
+  gap: 0;
+}
+.circle-button.recording {
+  width: 120px;
+  border-radius: 26px;
+  justify-content: flex-start;
+  gap: 10px;
+  padding-left: 18px;
+}
+.circle-button img {
+  width: 28px;
+  height: 28px;
+  display: block;
+}
+.circle-button.recording img {
+  display: none;
+}
+.stop-icon {
+  width: 18px;
+  height: 18px;
+  background: #111;
+  border-radius: 4px;
+  display: none;
+}
+.circle-button.recording .stop-icon {
+  display: block;
+}
+#timer {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #000000;
+  display: none;
+  margin-left: 10px;
+}
+.circle-button.recording #timer {
+  display: inline;
 }
 .circle-button:hover::after {
   content: attr(data-tooltip);
@@ -112,10 +151,11 @@ iframe {
   border-radius: 5px;
   white-space: nowrap;
 }
-.circle-button img {
-  width: 24px;
-  height: 24px;
+
+#playBtn {
+  margin-top: 12px;
 }
+
 .report-panel {
   position: fixed;
   top: 0;
@@ -145,4 +185,21 @@ iframe {
 }
 .report-close {
   right: 500px;
+}
+.icon-button {
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.icon-button img {
+  width: 28px;
+  height: 28px;
 }
