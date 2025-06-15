@@ -1,6 +1,6 @@
 // YouTube API 설정
-const API_KEY = 'AIzaSyAlHlTzINPubn3CXk8hVZx2TI9YuT7ejoE'; // 여기에 발급받은 API 키를 입력하세요
-const videoIds = []; // 비디오 ID를 저장할 배열
+const API_KEY = 'AIzaSyAlHlTzINPubn3CXk8hVZx2TI9YuT7ejoE'; 
+const videoIds = ['aW7D5S2ze3c','S237-0sPKoQ']; // 영상 ID
 
 // YouTube API 초기화
 function initYouTubeAPI() {
@@ -19,10 +19,14 @@ function onYouTubeIframeAPIReady() {
   player = new YT.Player('youtubePlayer', {
     height: '360',
     width: '640',
-    videoId: videoIds[0],
     playerVars: {
+      'rel': 0,
+      'controls': 1,
+      'autoplay': 0,
+      'mute': 0,
+      'loop': 0,
       'playsinline': 1,
-      'controls': 1
+      'playlist': videoIds[0]
     },
     events: {
       'onReady': onPlayerReady,
@@ -143,7 +147,6 @@ function uploadAudio(audioBlob) {
   })
   .then(response => {
     alert('업로드 성공: ' + JSON.stringify(response.data));
-    // TODO: 분석 결과를 화면에 표시하는 코드 추가 가능
   })
   .catch(error => {
     alert('업로드 실패: ' + error);
