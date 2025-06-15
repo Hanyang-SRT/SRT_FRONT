@@ -1,6 +1,6 @@
 // YouTube API 설정
 const API_KEY = 'AIzaSyAlHlTzINPubn3CXk8hVZx2TI9YuT7ejoE'; 
-const videoIds = ['aW7D5S2ze3c','S237-0sPKoQ']; // 영상 ID
+const videoIds = ['aW7D5S2ze3c','S237-0sPKoQ', 'n_f5mVyG7y4']; // 영상 ID
 
 // YouTube API 초기화
 function initYouTubeAPI() {
@@ -23,6 +23,8 @@ function onYouTubeIframeAPIReady() {
       'rel': 0,
       'controls': 1,
       'autoplay': 0,
+      'start': 30,
+      'end': 31,
       'mute': 0,
       'loop': 0,
       'playsinline': 1,
