@@ -219,3 +219,8 @@ iframe {
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s;
 }
+
+#reportBtn img {
+  width: 25px;
+  height: 25px;
+}

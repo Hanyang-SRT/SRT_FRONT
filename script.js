@@ -159,6 +159,7 @@ let timerInterval;
 let seconds = 0;
 let recordedAudioUrl = null;
 let isPlaying = false;
+let recordedAudioBlob = null;
 
 function toggleRecording() {
   const recordBtn = document.getElementById("recordBtn");
@@ -207,6 +208,7 @@ function startRecording() {
 
       mediaRecorder.onstop = () => {
         const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+        recordedAudioBlob = audioBlob; // 업로드하지 않고 변수에 저장만 함
         // 녹음된 파일을 재생할 수 있도록 URL 생성
         if (recordedAudioUrl) {
           URL.revokeObjectURL(recordedAudioUrl);
@@ -214,7 +216,7 @@ function startRecording() {
         recordedAudioUrl = URL.createObjectURL(audioBlob);
         document.getElementById("audioPlayer").src = recordedAudioUrl;
         document.getElementById("playBtn").style.display = "inline";
-        uploadAudio(audioBlob);
+        // uploadAudio(audioBlob); // 호출하지 않음
       };
     })
     .catch((err) => {
@@ -229,9 +231,10 @@ function stopRecording() {
 }
 
 function uploadAudio(audioBlob) {
+  alert("전송완료");
   const formData = new FormData();
   formData.append("user_audio", audioBlob, "recorded.wav");
-  formData.append("globalOrder", globalOrder);
+  formData.append("globalOrder", currentContentInfo.globalOrder);
   axios
     .post("http://15.165.186.129:3000/api/upload", formData, {
       headers: {
@@ -388,11 +391,6 @@ function testGetContentById() {
     });
 }
 
-// 기존 contentName 배열과 currentContentName 사용
-// let contentName = [ ... ];
-// let currentContentName = ...;
-// let script = ...;
-
 window.addEventListener("DOMContentLoaded", function () {
   // h1 텍스트 설정
   const contentNameElem = document.getElementById("contentName");
@@ -413,3 +411,11 @@ window.addEventListener("DOMContentLoaded", function () {
   updateContentName();
   initYouTubeAPI();
 });
+
+function reportVideo() {
+  if (recordedAudioBlob) {
+    uploadAudio(recordedAudioBlob);
+  } else {
+    alert("녹음된 파일이 없습니다. 먼저 녹음을 완료해주세요.");
+  }
+}
