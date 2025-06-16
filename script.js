@@ -243,11 +243,54 @@ function uploadAudio(audioBlob) {
       withCredentials: true,
     })
     .then((response) => {
-      alert('업로드 성공: ' + JSON.stringify(response.data));
-      // Report 토글 버튼 표시
-      const reportToggle = document.querySelector('.report-toggle');
-      if (reportToggle) {
-        reportToggle.classList.add('show');
+      // 응답 데이터 처리 
+      const responseData = response.data;
+      
+      // 응답 데이터가 있는지 확인
+      if (responseData) {
+        // 예시: 응답 데이터의 특정 필드 확인
+        if (responseData.success) {
+          // Report 토글 버튼 표시
+          const reportToggle = document.querySelector('.report-toggle');
+          if (reportToggle) {
+            reportToggle.classList.add('show');
+          }
+          
+          // 점수와 피드백 처리
+          if (responseData.resource) {
+            const { score, feedback, details } = responseData.resource;
+            
+            // 점수 표시
+            console.log('총점:', score);
+            
+            // 피드백 표시
+            console.log('피드백:', feedback);
+            
+            // 상세 점수 처리
+            if (details) {
+              console.log('발음 점수:', details.pitch);
+              console.log('길이 점수:', details.duration);
+              console.log('강세 점수:', details.stress);
+            }
+            
+            // Report 패널에 결과 표시
+            const reportPanel = document.getElementById('reportPanel');
+            if (reportPanel) {
+              reportPanel.innerHTML = `
+                <h2>평가 결과</h2>
+                <p>총점: ${score}점</p>
+                <p>피드백: ${feedback}</p>
+                <h3>상세 점수</h3>
+                <p>발음: ${details.pitch}점</p>
+                <p>길이: ${details.duration}점</p>
+                <p>강세: ${details.stress}점</p>
+              `;
+            }
+          }
+        } else {
+          // 실패 처리
+          alert('업로드 실패: ' + (responseData.message || '알 수 없는 오류가 발생했습니다.'));
+        }
       }
     })
     .catch((error) => {
@@ -320,14 +363,19 @@ function getContentById(contentId) {
 
 function toggleReport(show) {
   const panel = document.getElementById('reportPanel');
+  const container = document.querySelector('.container');
   const openBtn = document.querySelector('.report-toggle');
   const closeBtn = document.querySelector('.report-close');
 
   if (show) {
+    panel.classList.add('wide');
+    if (container) container.classList.add('shifted');
     panel.style.display = 'flex';
     openBtn.style.display = 'none';
     closeBtn.style.display = 'block';
   } else {
+    panel.classList.remove('wide');
+    if (container) container.classList.remove('shifted');
     panel.style.display = 'none';
     openBtn.style.display = 'block';
     closeBtn.style.display = 'none';
@@ -360,6 +408,12 @@ window.addEventListener('DOMContentLoaded', function () {
     });
   }
   updateContentName();
+  // report 패널을 기본적으로 숨김
+  const reportPanel = document.getElementById('reportPanel');
+  if (reportPanel) {
+    reportPanel.style.display = 'none';
+    reportPanel.classList.remove('wide');
+  }
 });
 
 // 페이지 로드시 YouTube API 초기화
@@ -430,3 +484,20 @@ function reportVideo() {
     alert('녹음된 파일이 없습니다. 먼저 녹음을 완료해주세요.');
   }
 }
+
+// 도넛 그래프 점수 적용 함수
+function setDonutScore(selector, score) {
+  const el = document.querySelector(selector);
+  if (el) {
+    el.style.setProperty('--score', score);
+    el.querySelector('span').textContent = score;
+  }
+}
+
+// 예시: 점수 적용 (실제 데이터로 대체 가능)
+window.addEventListener('DOMContentLoaded', function () {
+  setDonutScore('#pitchScore', 60);
+  setDonutScore('#durationScore', 85);
+  setDonutScore('#intensityScore', 75);
+  setDonutScore('#overallScore', 72);
+});

@@ -99,8 +99,40 @@
       <audio id="audioPlayer" style="display: none"></audio>
 
       <div class="report-panel" id="reportPanel">
-        <h2>Report</h2>
-        <p>Pitch, Duration, Stress 분석 결과를 여기에 표시합니다.</p>
+        <h2 class="report-title">Report</h2>
+        <div class="report-metrics">
+          <div class="metric-row">
+            <div class="metric-title">Pitch</div>
+            <div class="metric-info">
+              <img src="./Images/pitch.png" class="metric-img" alt="Pitch Result" />
+            </div>
+            <div class="circle-score" id="pitchScore"><span>60</span></div>
+          </div>
+          <div class="metric-row">
+            <div class="metric-title">Duration</div>
+            <div class="metric-info">
+              <img src="./Images/duration.png" class="metric-img" alt="Duration Result" />
+            </div>
+            <div class="circle-score" id="durationScore"><span>85</span></div>
+          </div>
+          <div class="metric-row">
+            <div class="metric-title">Intensity</div>
+            <div class="metric-info">
+              <img src="./Images/intensity.png" class="metric-img" alt="Intensity Result" />
+            </div>
+            <div class="circle-score" id="intensityScore"><span>75</span></div>
+          </div>
+        </div>
+        <hr class="report-divider" />
+        <div class="report-summary">
+          <div class="summary-text">
+            <div class="summary-title">총평</div>
+            <div class="summary-feedback">너무 잘했습니다.</div>
+          </div>
+          <div class="summary-score">
+            <div class="overall-circle-score" id="overallScore"><span>72</span></div>
+          </div>
+        </div>
       </div>
 
       <!-- <input type="text" id="contentIdInput" placeholder="Contents ID 입력" />
