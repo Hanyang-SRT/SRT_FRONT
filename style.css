@@ -224,3 +224,25 @@ iframe {
   width: 25px;
   height: 25px;
 }
+
+.oval-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 180px;
+  padding: 12px 28px;
+  border-radius: 32px;
+  background: #fff;
+  border: none;
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #2e294e;
+  box-shadow: 0 4px 16px rgba(46, 41, 78, 0.08);
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.oval-button:hover {
+  background: #f3f0ff;
+  box-shadow: 0 6px 18px rgba(46, 41, 78, 0.13);
+}

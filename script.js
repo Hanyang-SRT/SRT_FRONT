@@ -281,11 +281,17 @@ function playRecordedAudio() {
 }
 
 function replayVideo() {
-  const iframe = document.getElementById("youtubePlayer");
-  iframe.contentWindow.postMessage(
-    '{"event":"command","func":"seekTo","args":[0, true]}',
-    "*"
-  );
+  // const iframe = document.getElementById("youtubePlayer");
+  // iframe.contentWindow.postMessage(
+  //   '{"event":"command","func":"seekTo","args":[0, true]}',
+  //   "*"
+  // );
+  player.loadVideoById({
+    videoId: currentContentInfo.videoId,
+    startSeconds: currentContentInfo.startTime,
+    endSeconds: currentContentInfo.endTime,
+    suggestedQuality: "default",
+  });
 }
 
 function getContentById(contentId) {

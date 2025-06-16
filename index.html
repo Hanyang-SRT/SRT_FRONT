@@ -28,6 +28,32 @@
         <button class="arrow-button" onclick="nextVideo()">&#x276F;</button>
       </div>
 
+      <button
+        id="replayBtn"
+        class="oval-button"
+        onclick="replayVideo()"
+        data-tooltip="구간 다시보기"
+        style="
+          margin: 0 auto 16px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          justify-content: center;
+          min-width: 180px;
+          padding: 12px 28px;
+          border-radius: 32px;
+        "
+      >
+        <span style="font-size: 1.1em; font-weight: bold; color: #2e294e"
+          >영상 다시보기</span
+        >
+        <img
+          src="Images/replay.png"
+          alt="Replay"
+          style="width: 28px; height: 28px"
+        />
+      </button>
+
       <div class="script-box" id="scriptBox"></div>
 
       <div class="control-area">
