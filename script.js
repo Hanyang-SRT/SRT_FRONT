@@ -244,6 +244,11 @@ function uploadAudio(audioBlob) {
     })
     .then((response) => {
       alert('업로드 성공: ' + JSON.stringify(response.data));
+      // Report 토글 버튼 표시
+      const reportToggle = document.querySelector('.report-toggle');
+      if (reportToggle) {
+        reportToggle.classList.add('show');
+      }
     })
     .catch((error) => {
       console.error('상세 에러:', error);
