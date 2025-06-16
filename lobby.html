@@ -65,7 +65,7 @@
       }
 
       .category-button::after {
-        content: '→';
+        content: "→";
         font-size: 1.8em;
         color: #2e294e;
         margin-left: 20px;
@@ -97,21 +97,32 @@
     <div class="container">
       <div class="content-box">
         <div class="welcome-message">
-          <h2>Prosody-Based<br> Korean Education System</h2>
+          <h2>
+            Prosody-Based<br />
+            Korean Education System
+          </h2>
           <p>원하는 카테고리를 선택해주세요</p>
         </div>
 
         <div class="category-container">
-          <button class="category-button" onclick="location.href='index.html'">
+          <!-- 직장 생활 버튼 -->
+          <button
+            class="category-button"
+            onclick="location.href='index.html?category=work'"
+          >
             💼 직장 생활
           </button>
-          <button class="category-button" onclick="location.href='campus.html'">
+          <!-- 청춘/캠퍼스 버튼 -->
+          <button
+            class="category-button"
+            onclick="location.href='index.html?category=campus'"
+          >
             🎓 청춘/캠퍼스
           </button>
         </div>
       </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="lobby.js"></script>
   </body>
-</html> 
+</html>

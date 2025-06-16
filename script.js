@@ -1,7 +1,24 @@
 // YouTube API 설정
 const API_KEY = "AIzaSyAlHlTzINPubn3CXk8hVZx2TI9YuT7ejoE";
 // const videoIds = ["aW7D5S2ze3c", "S237-0sPKoQ", "n_f5mVyG7y4"]; // 영상 ID
-contentID = [0,1,2,3,4,5,6,7,8,9];
+
+// URL 파라미터로 카테고리 구분
+function getCategoryFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("category");
+}
+
+let contentID, contentName;
+
+const category = getCategoryFromUrl();
+if (category === "work") {
+  contentID = [5, 6]; // 여기에 카테고리에 맞는 contentID 입력, 임시 설정
+  contentName = ["미생", "스토브리그"]; // 임시 설정
+} else if (category === "campus") {
+  contentID = [7, 9];
+  contentName = ["치즈인더트랩", "그해 우리는"];
+}
+let currentIndex = 0;
 
 // 얼른 가자 출발해야해
 
@@ -19,8 +36,8 @@ let player;
 
 // 콘텐츠 정보를 저장할 전역 변수
 let currentContentInfo = {
-  script: '',
-  videoId: '',
+  script: "",
+  videoId: "",
   startTime: 0,
   endTime: 0,
   globalOrder: 0,
@@ -29,9 +46,11 @@ let currentContentInfo = {
 // 콘텐츠 정보를 가져오는 함수
 async function fetchContentInfo(contentId) {
   try {
-    const response = await axios.get(`http://15.165.186.129:3000/api/contents/${contentId}`);
+    const response = await axios.get(
+      `http://15.165.186.129:3000/api/contents/${contentId}`
+    );
     const data = response.data.resource;
-    
+
     // 전역 변수에 정보 저장
     currentContentInfo = {
       script: data.script,
@@ -40,13 +59,15 @@ async function fetchContentInfo(contentId) {
       endTime: data.endTime,
       globalOrder: data.globalOrder,
     };
-    
+
+    updateScriptBox();
+
     // 콘텐츠 정보 표시 (예: alert 또는 DOM 요소에 표시)
-    console.log('콘텐츠 정보:', currentContentInfo);
+    console.log("콘텐츠 정보:", currentContentInfo);
     return currentContentInfo;
   } catch (error) {
-    console.error('콘텐츠 정보 가져오기 실패:', error);
-    alert('콘텐츠 정보를 불러오지 못했습니다.');
+    console.error("콘텐츠 정보 가져오기 실패:", error);
+    alert("콘텐츠 정보를 불러오지 못했습니다.");
     return null;
   }
 }
@@ -56,7 +77,7 @@ async function onYouTubeIframeAPIReady() {
   try {
     // 먼저 콘텐츠 정보를 가져옵니다
     const contentInfo = await fetchContentInfo(contentID[0]);
-    
+
     // 콘텐츠 정보를 기반으로 플레이어 초기화
     player = new YT.Player("youtubePlayer", {
       height: "360",
@@ -78,8 +99,8 @@ async function onYouTubeIframeAPIReady() {
       },
     });
   } catch (error) {
-    console.error('플레이어 초기화 실패:', error);
-    alert('영상 정보를 불러오는데 실패했습니다.');
+    console.error("플레이어 초기화 실패:", error);
+    alert("영상 정보를 불러오는데 실패했습니다.");
   }
 }
 
@@ -94,23 +115,40 @@ function onPlayerStateChange(event) {
   console.log("Player state changed:", event.data);
 }
 
+function updateContentName() {
+  const contentNameElem = document.getElementById("contentName");
+  if (contentNameElem) contentNameElem.innerText = contentName[currentIndex];
+}
+
 // 이전 비디오 재생
 async function previousVideo() {
-  const currentIndex = videoIds.indexOf(player.getVideoData().video_id);
   if (currentIndex > 0) {
-    player.loadVideoById(videoIds[currentIndex - 1]);
+    currentIndex--;
+    updateContentName();
     // 콘텐츠 정보 업데이트
-    await fetchContentInfo(contentID[currentIndex - 1]);
+    await fetchContentInfo(contentID[currentIndex]);
+    player.cueVideoById({
+      videoId: currentContentInfo.videoId,
+      startSeconds: currentContentInfo.startTime,
+      endSeconds: currentContentInfo.endTime,
+      suggestedQuality: "default",
+    });
   }
 }
 
 // 다음 비디오 재생
 async function nextVideo() {
-  const currentIndex = videoIds.indexOf(player.getVideoData().video_id);
-  if (currentIndex < videoIds.length - 1) {
-    player.loadVideoById(videoIds[currentIndex + 1]);
+  if (currentIndex < contentName.length - 1) {
+    currentIndex++;
+    updateContentName();
     // 콘텐츠 정보 업데이트
-    await fetchContentInfo(contentID[currentIndex + 1]);
+    await fetchContentInfo(contentID[currentIndex]);
+    player.cueVideoById({
+      videoId: currentContentInfo.videoId,
+      startSeconds: currentContentInfo.startTime,
+      endSeconds: currentContentInfo.endTime,
+      suggestedQuality: "default",
+    });
   }
 }
 
@@ -307,6 +345,7 @@ window.addEventListener("DOMContentLoaded", function () {
       isPlaying = false;
     });
   }
+  updateContentName();
 });
 
 // 페이지 로드시 YouTube API 초기화
@@ -324,10 +363,24 @@ function testGetContentById() {
   axios
     .get(`http://15.165.186.129:3000/api/contents/${contentId}`)
     .then((response) => {
-      const data = response.data.resource;
-      alert(
-        `스크립트: ${data.script}\n비디오ID: ${data.videoId}\n구간: ${data.startTime}~${data.endTime}`
-      );
+      const data = response.data;
+      if (data.success && data.resource) {
+        const res = data.resource;
+        // script, currentContentName 값 반영
+        if (typeof script !== "undefined") script = res.script;
+        if (typeof currentContentName !== "undefined")
+          currentContentName = res.videoId;
+        // h1, scriptBox 텍스트 즉시 갱신
+        const contentNameElem = document.getElementById("contentName");
+        if (contentNameElem) contentNameElem.innerText = res.videoId;
+        const scriptBoxElem = document.getElementById("scriptBox");
+        if (scriptBoxElem) scriptBoxElem.innerText = res.script;
+        alert(
+          `스크립트: ${res.script}\n비디오ID: ${res.videoId}\n구간: ${res.startTime}~${res.endTime}`
+        );
+      } else {
+        alert("콘텐츠 정보를 불러오지 못했습니다.\n" + (data.message || ""));
+      }
     })
     .catch((error) => {
       console.error("콘텐츠 요청 실패:", error);
@@ -335,3 +388,28 @@ function testGetContentById() {
     });
 }
 
+// 기존 contentName 배열과 currentContentName 사용
+// let contentName = [ ... ];
+// let currentContentName = ...;
+// let script = ...;
+
+window.addEventListener("DOMContentLoaded", function () {
+  // h1 텍스트 설정
+  const contentNameElem = document.getElementById("contentName");
+  if (contentNameElem && typeof currentContentName !== "undefined")
+    contentNameElem.innerText = currentContentName;
+  // script-box 텍스트 설정
+  const scriptBoxElem = document.getElementById("scriptBox");
+  if (scriptBoxElem && typeof script !== "undefined")
+    scriptBoxElem.innerText = script;
+});
+
+function updateScriptBox() {
+  const scriptBoxElem = document.getElementById("scriptBox");
+  if (scriptBoxElem) scriptBoxElem.innerText = currentContentInfo.script;
+}
+
+window.addEventListener("DOMContentLoaded", function () {
+  updateContentName();
+  initYouTubeAPI();
+});
