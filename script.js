@@ -1,10 +1,7 @@
 // YouTube API 설정
 const API_KEY = "AIzaSyAlHlTzINPubn3CXk8hVZx2TI9YuT7ejoE";
-const videoIds = ["aW7D5S2ze3c", "S237-0sPKoQ", "n_f5mVyG7y4"]; // 영상 ID
-const globalOrder = 9; // video 순서
-const videoID = null; //
-const startTime = 0;
-const endTime = 0;
+// const videoIds = ["aW7D5S2ze3c", "S237-0sPKoQ", "n_f5mVyG7y4"]; // 영상 ID
+contentID = [0,1,2,3,4,5,6,7,8,9];
 
 // 얼른 가자 출발해야해
 
@@ -20,32 +17,76 @@ function initYouTubeAPI() {
 // YouTube 플레이어 객체
 let player;
 
+// 콘텐츠 정보를 저장할 전역 변수
+let currentContentInfo = {
+  script: '',
+  videoId: '',
+  startTime: 0,
+  endTime: 0,
+  globalOrder: 0,
+};
+
+// 콘텐츠 정보를 가져오는 함수
+async function fetchContentInfo(contentId) {
+  try {
+    const response = await axios.get(`http://15.165.186.129:3000/api/contents/${contentId}`);
+    const data = response.data.resource;
+    
+    // 전역 변수에 정보 저장
+    currentContentInfo = {
+      script: data.script,
+      videoId: data.videoId,
+      startTime: data.startTime,
+      endTime: data.endTime,
+      globalOrder: data.globalOrder,
+    };
+    
+    // 콘텐츠 정보 표시 (예: alert 또는 DOM 요소에 표시)
+    console.log('콘텐츠 정보:', currentContentInfo);
+    return currentContentInfo;
+  } catch (error) {
+    console.error('콘텐츠 정보 가져오기 실패:', error);
+    alert('콘텐츠 정보를 불러오지 못했습니다.');
+    return null;
+  }
+}
+
 // YouTube IFrame API 준비되면 호출되는 함수
-function onYouTubeIframeAPIReady() {
-  player = new YT.Player("youtubePlayer", {
-    height: "360",
-    width: "640",
-    playerVars: {
-      rel: 1,
-      controls: 1,
-      autoplay: 0,
-      start: 30,
-      end: 31,
-      mute: 0,
-      loop: 0,
-      playsinline: 1,
-      playlist: videoIds[0],
-    },
-    events: {
-      onReady: onPlayerReady,
-      onStateChange: onPlayerStateChange,
-    },
-  });
+async function onYouTubeIframeAPIReady() {
+  try {
+    // 먼저 콘텐츠 정보를 가져옵니다
+    const contentInfo = await fetchContentInfo(contentID[0]);
+    
+    // 콘텐츠 정보를 기반으로 플레이어 초기화
+    player = new YT.Player("youtubePlayer", {
+      height: "360",
+      width: "640",
+      playerVars: {
+        rel: 1,
+        controls: 1,
+        autoplay: 0,
+        start: contentInfo.startTime,
+        end: contentInfo.endTime,
+        mute: 0,
+        loop: 0,
+        playsinline: 1,
+        playlist: contentInfo.videoId,
+      },
+      events: {
+        onReady: onPlayerReady,
+        onStateChange: onPlayerStateChange,
+      },
+    });
+  } catch (error) {
+    console.error('플레이어 초기화 실패:', error);
+    alert('영상 정보를 불러오는데 실패했습니다.');
+  }
 }
 
 // 플레이어 준비 완료시 호출
 function onPlayerReady(event) {
   console.log("Player is ready");
+  // 이미 콘텐츠 정보를 가져왔으므로 여기서는 추가 작업이 필요 없습니다
 }
 
 // 플레이어 상태 변경시 호출
@@ -54,18 +95,22 @@ function onPlayerStateChange(event) {
 }
 
 // 이전 비디오 재생
-function previousVideo() {
+async function previousVideo() {
   const currentIndex = videoIds.indexOf(player.getVideoData().video_id);
   if (currentIndex > 0) {
     player.loadVideoById(videoIds[currentIndex - 1]);
+    // 콘텐츠 정보 업데이트
+    await fetchContentInfo(contentID[currentIndex - 1]);
   }
 }
 
 // 다음 비디오 재생
-function nextVideo() {
+async function nextVideo() {
   const currentIndex = videoIds.indexOf(player.getVideoData().video_id);
   if (currentIndex < videoIds.length - 1) {
     player.loadVideoById(videoIds[currentIndex + 1]);
+    // 콘텐츠 정보 업데이트
+    await fetchContentInfo(contentID[currentIndex + 1]);
   }
 }
 
@@ -289,3 +334,4 @@ function testGetContentById() {
       alert("콘텐츠 정보를 불러오지 못했습니다.");
     });
 }
+
