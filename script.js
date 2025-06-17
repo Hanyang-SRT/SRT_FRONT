@@ -2,6 +2,9 @@
 const API_KEY = 'AIzaSyAlHlTzINPubn3CXk8hVZx2TI9YuT7ejoE';
 // const videoIds = ["aW7D5S2ze3c", "S237-0sPKoQ", "n_f5mVyG7y4"]; // 영상 ID
 
+const API_URL = `http://${config.API_IP}:${config.API_PORT}`;
+console.log('API URL:', API_URL);
+
 // URL 파라미터로 카테고리 구분
 function getCategoryFromUrl() {
   const params = new URLSearchParams(window.location.search);
@@ -46,9 +49,7 @@ let currentContentInfo = {
 // 콘텐츠 정보를 가져오는 함수
 async function fetchContentInfo(contentId) {
   try {
-    const response = await axios.get(
-      `http://${process.env.IP_ADDRESS}:${process.env.PORT}/api/contents/${contentId}`
-    );
+    const response = await axios.get(`${API_URL}/api/contents/${contentId}`);
     const data = response.data.resource;
 
     // 전역 변수에 정보 저장
@@ -237,14 +238,10 @@ function uploadAudio(audioBlob) {
   formData.append('globalOrder', currentContentInfo.globalOrder);
 
   axios
-    .post(
-      `http://${process.env.IP_ADDRESS}:${process.env.PORT}/api/upload`,
-      formData,
-      {
-        headers: { 'Content-Type': 'multipart/form-data' },
-        withCredentials: true,
-      }
-    )
+    .post(`${API_URL}/api/upload`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      withCredentials: true,
+    })
     .then((response) => {
       const data = response.data;
       if (!data) return;
@@ -309,9 +306,7 @@ function replayVideo() {
 
 function getContentById(contentId) {
   axios
-    .get(
-      `http://${process.env.IP_ADDRESS}:${process.env.PORT}/api/contents/${contentId}`
-    )
+    .get(`${API_URL}/api/contents/${contentId}`)
     .then((response) => {
       const data = response.data;
       console.log('콘텐츠 정보:', data);
@@ -396,9 +391,7 @@ function testGetContentById() {
     return;
   }
   axios
-    .get(
-      `http://${process.env.IP_ADDRESS}:${process.env.PORT}/api/contents/${contentId}`
-    )
+    .get(`${API_URL}/api/contents/${contentId}`)
     .then((response) => {
       const data = response.data;
       if (data.success && data.resource) {
