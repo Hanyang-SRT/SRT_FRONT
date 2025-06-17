@@ -1,5 +1,5 @@
 // YouTube API 설정
-const API_KEY = 'AIzaSyAlHlTzINPubn3CXk8hVZx2TI9YuT7ejoE';
+const API_KEY = config.API_KEY;
 // const videoIds = ["aW7D5S2ze3c", "S237-0sPKoQ", "n_f5mVyG7y4"]; // 영상 ID
 
 const API_URL = `http://${config.API_IP}:${config.API_PORT}`;
