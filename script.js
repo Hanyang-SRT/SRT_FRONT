@@ -47,7 +47,7 @@ let currentContentInfo = {
 async function fetchContentInfo(contentId) {
   try {
     const response = await axios.get(
-      `http://15.165.186.129:3000/api/contents/${contentId}`
+      `http://${process.env.IP_ADDRESS}:${process.env.PORT}/api/contents/${contentId}`
     );
     const data = response.data.resource;
 
@@ -237,10 +237,14 @@ function uploadAudio(audioBlob) {
   formData.append('globalOrder', currentContentInfo.globalOrder);
 
   axios
-    .post('http://15.165.186.129:3000/api/upload', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-      withCredentials: true,
-    })
+    .post(
+      `http://${process.env.IP_ADDRESS}:${process.env.PORT}/api/upload`,
+      formData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        withCredentials: true,
+      }
+    )
     .then((response) => {
       const data = response.data;
       if (!data) return;
@@ -305,7 +309,9 @@ function replayVideo() {
 
 function getContentById(contentId) {
   axios
-    .get(`http://15.165.186.129:3000/api/contents/${contentId}`)
+    .get(
+      `http://${process.env.IP_ADDRESS}:${process.env.PORT}/api/contents/${contentId}`
+    )
     .then((response) => {
       const data = response.data;
       console.log('콘텐츠 정보:', data);
@@ -390,7 +396,9 @@ function testGetContentById() {
     return;
   }
   axios
-    .get(`http://15.165.186.129:3000/api/contents/${contentId}`)
+    .get(
+      `http://${process.env.IP_ADDRESS}:${process.env.PORT}/api/contents/${contentId}`
+    )
     .then((response) => {
       const data = response.data;
       if (data.success && data.resource) {
