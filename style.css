@@ -213,7 +213,7 @@ iframe {
   border-radius: 8px;
   cursor: pointer;
   z-index: 1100;
-  display: none;
+  display: block;
 }
 .report-toggle {
   right: 20px;
