@@ -108,32 +108,38 @@
                 src="./Images/pitch.png"
                 class="metric-img"
                 alt="Pitch Result"
+                onclick="showEnlargedImage(this.src)"
               />
             </div>
-            <div class="circle-score" id="pitchScore"><span>60</span></div>
+            <div class="circle-score" id="pitchScore"><span>0</span></div>
           </div>
           <div class="metric-row">
             <div class="metric-title">Duration</div>
             <div class="metric-info">
               <div class="metric-feedback" id="durationFeedback"></div>
             </div>
-            <div class="circle-score" id="durationScore"><span>85</span></div>
+            <div class="circle-score" id="durationScore"><span>0</span></div>
           </div>
           <div class="metric-row">
             <div class="metric-title">Intensity</div>
             <div class="metric-info">
               <div class="metric-feedback" id="intensityFeedback"></div>
             </div>
-            <div class="circle-score" id="intensityScore"><span>75</span></div>
+            <div class="circle-score" id="intensityScore"><span>0</span></div>
           </div>
         </div>
         <hr class="report-divider" />
         <div class="report-summary">
           <div class="summary-text">
             <div class="summary-title">사용자 발음</div>
-            <div class="summary-feedback">너무 잘했습니다.</div> <!-- 사용자 발음 여기에 반영-->
+            <div class="summary-feedback" id="userText"></div>
           </div>
         </div>
+      </div>
+
+      <!-- 이미지 오버레이 -->
+      <div id="imageOverlay" class="image-overlay" onclick="hideEnlargedImage()">
+        <img id="enlargedImage" class="enlarged-image" src="" alt="Enlarged Image" />
       </div>
 
       <!-- <input type="text" id="contentIdInput" placeholder="Contents ID 입력" />
